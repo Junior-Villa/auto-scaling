@@ -127,10 +127,10 @@ Onde:
 
 ## Configurando o teste de carga
 
-### Aplicar o ConfigMap
+### Aplicar o ConfigMap, lembrando que para criar o configmap o arquivo script.js precisa existir
 
 ```bash
-kubectl apply -f k6/k6-script-configmap.yaml
+kubectl create configmap k6-script   --from-file=script.js   -n default   --dry-run=client -o yaml > k6-script-configmap.yaml && kubectl apply -f k6/k6-script-configmap.yaml
 ```
 
 ### Definir as variáveis de ambiente
