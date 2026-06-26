@@ -60,9 +60,6 @@ Para validar o comportamento do autoscaling, é utilizado o **Grafana k6**, exec
 
 ```text
 .
-├── README.md
-├── LICENSE
-│
 ├── keda
 │   └── scaledobject.yaml
 │
@@ -225,19 +222,6 @@ Todo esse processo ocorre automaticamente através do KEDA.
 
 ---
 
-## Próximos testes
-
-Algumas melhorias que podem ser implementadas neste projeto:
-
-- Escalonamento baseado em latência
-- Escalonamento baseado em múltiplas métricas
-- Integração com Grafana
-- Utilização de HPA juntamente com o KEDA
-- Testes com diferentes janelas de observação (`rate`)
-- Ajuste fino de thresholds para diferentes cenários de carga
-
----
-
 ## Objetivo
 
 Este projeto tem como objetivo servir como exemplo prático de implementação de autoscaling orientado por métricas de negócio utilizando:
@@ -257,11 +241,3 @@ Demonstrando uma alternativa ao autoscaling tradicional baseado apenas em CPU e 
 Contribuições são bem-vindas.
 
 Caso encontre melhorias, abra uma Issue ou envie um Pull Request.
-
----
-
-## Licença
-
-Este projeto está licenciado sob a licença MIT.
-
-Consulte o arquivo LICENSE para mais informações.
