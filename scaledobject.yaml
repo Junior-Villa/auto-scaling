@@ -1,0 +1,34 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+
+metadata:
+  name: sample-api
+  namespace: default
+
+spec:
+  scaleTargetRef:
+    name: sample-api
+
+  minReplicaCount: 3
+  maxReplicaCount: 6
+
+  triggers:
+    - type: prometheus
+
+      metadata:
+        serverAddress: http://prometheus-service.monitoring.svc.cluster.local:9090
+
+        metricName: sample-api-rps
+
+        threshold: "10"
+
+        query: |
+          sum(
+            rate(
+              http_server_requests_seconds_count{
+                application="sample-api",
+                uri!="/actuator/prometheus",
+                uri!~"/actuator/health.*"
+              }[2m]
+            )
+          )
