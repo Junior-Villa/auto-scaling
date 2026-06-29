@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: k6-script
+  namespace: default
+data:
+  script.js: |
+    import http from 'k6/http';
+    import { check } from 'k6';
+    export const options = {
+      scenarios: {
+        carga: {
+          executor: 'constant-arrival-rate',
+          // quantidade de requisições por segundo
+          rate: 20,
+          timeUnit: '1s',
+          // Tempo do teste
+          duration: '3m',
+          // Usuarios Virtuais criados pelo k6
+          preAllocatedVUs: 50,
+          // Máximo de usuarios virtuais
+          maxVUs: 150,
+          // Aguarda requisições em andamento terminarem
+          gracefulStop: '30s',
+        },
+      },
+    };
+    export default function () {
+      const headers = {
+        Authorization: `Bearer ${__ENV.TOKEN}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      };
+      const params = {
+        headers,
+        timeout: '30s',
+      };
+      const method = (__ENV.METHOD || 'GET').toUpperCase();
+      const body = __ENV.BODY || '';
+      let res;
+      switch (method) {
+        case 'POST':
+          res = http.post(__ENV.TARGET_URL, body, params);
+          break;
+        case 'PUT':
+          res = http.put(__ENV.TARGET_URL, body, params);
+          break;
+        case 'DELETE':
+          res = http.del(__ENV.TARGET_URL, null, params);
+          break;
+        default:
+          res = http.get(__ENV.TARGET_URL, params);
+          break;
+      }
+      check(res, {
+        'status 2xx': (r) => r.status >= 200 && r.status < 300,
+      });
+      if (res.status < 200 || res.status >= 300) {
+        console.log(`${method} ${__ENV.TARGET_URL} -> ${res.status}`);
+      }
+    }
